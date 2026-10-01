@@ -1,0 +1,5 @@
+__pycache__/
+*.tar.gz
+contact-sheet.jpg
+.DS_Store
+Thumbs.db
