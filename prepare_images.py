@@ -4,9 +4,11 @@ from concurrent.futures import ThreadPoolExecutor
 import json, io
 
 root = Path(__file__).resolve().parent
-files = sorted((root.parent / 'Photos').glob('*'))
-order = [6,12,36,1,7,10,20,5,21,3,4,11,24,13,14,15,9,0,19,22,23,16,17,18,25,26,27,28,29,30,31,32,2,33,34,35,8]
-labels = {6:'Droptines · Lincoln Hall, Chicago',12:'Denzel Curry · Riviera Theatre',36:'Tazu · Red Rocks',7:'Sam Blacky · Radius, Chicago',10:'Chance the Rapper',5:'Daniel Allan',3:'Gotti · PRYSM',4:'Gotti · PRYSM',11:'Claude VonStroke · Chicago',13:'Fly Nari',32:'Radius, Chicago',35:'Supertaste · Electric Forest'}
+manifest = json.loads((root / 'dist' / 'photos.json').read_text(encoding='utf-8'))
+# Preserve image IDs, captions and gallery order when source files are renamed.
+files = {photo['id']: root.parent / 'Photos' / photo['original'] for photo in manifest}
+order = [photo['id'] for photo in manifest]
+labels = {photo['id']: photo['label'] for photo in manifest}
 
 def convert(i):
     p = files[i]
