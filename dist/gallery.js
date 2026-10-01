@@ -46,6 +46,11 @@ viewer.addEventListener('touchend',e=>{const delta=e.changedTouches[0].clientX-t
 document.querySelector('#year').textContent = new Date().getFullYear();
 fetch('photos.json').then(r=>{if(!r.ok)throw new Error('Collection unavailable');return r.json();}).then(data=>{
   photos=data;
+  // Fisher–Yates gives each page load a fresh, unbiased gallery order.
+  for (let i = photos.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [photos[i], photos[j]] = [photos[j], photos[i]];
+  }
   photos.forEach((photo,i)=>{
     const button=document.createElement('button');button.className='photo';button.setAttribute('aria-label',`View photograph ${number(i)}: ${photo.label}`);
     const img=new Image();img.alt=photo.label;img.width=photo.width;img.height=photo.height;img.loading=i<3?'eager':'lazy';img.decoding='async';if(i===0)img.fetchPriority='high';
